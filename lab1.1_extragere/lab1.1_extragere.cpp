@@ -9,8 +9,9 @@
 #include <cctype>
 #include <windows.h>
 
-std::unordered_set<std::string> stopWords;
+using namespace std;
 
+<<<<<<< HEAD
 struct DateArticol {
     std::string numeFisier;
     std::string folderDestinatie;
@@ -20,17 +21,30 @@ struct DateArticol {
 
 void incarcaStopWords(const std::string& caleFisier) {
     std::ifstream file(caleFisier);
+=======
+unordered_set<string> stopWords;
+
+struct DateArticol {
+    string numeFisier;
+    string folderDestinatie;
+    string titluFiltrat;
+    string textFiltrat;
+};
+
+void incarcaStopWords(const string& caleFisier) {
+    ifstream file(caleFisier);
+>>>>>>> b9e1aef (Dictionar global)
     if (!file.is_open()) return;
-    std::string cuvant;
+    string cuvant;
     while (file >> cuvant) {
-        std::transform(cuvant.begin(), cuvant.end(), cuvant.begin(), ::tolower);
+        transform(cuvant.begin(), cuvant.end(), cuvant.begin(), ::tolower);
         stopWords.insert(cuvant);
     }
     file.close();
 }
 
-std::string eliminaTaguriXML(const std::string& text) {
-    std::string rezultat = "";
+string eliminaTaguriXML(const string& text) {
+    string rezultat = "";
     bool inTag = false;
     for (char ch : text) {
         if (ch == '<') {
@@ -47,22 +61,22 @@ std::string eliminaTaguriXML(const std::string& text) {
     return rezultat;
 }
 
-std::string curataSiFiltreazaText(const std::string& text) {
-    std::string faraTaguri = eliminaTaguriXML(text);
-    std::string textCurat = "";
+string curataSiFiltreazaText(const string& text) {
+    string faraTaguri = eliminaTaguriXML(text);
+    string textCurat = "";
 
     for (char ch : faraTaguri) {
-        if (std::isalnum(static_cast<unsigned char>(ch)) || std::isspace(static_cast<unsigned char>(ch))) {
-            textCurat += static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+        if (isalnum(static_cast<unsigned char>(ch)) || isspace(static_cast<unsigned char>(ch))) {
+            textCurat += static_cast<char>(tolower(static_cast<unsigned char>(ch)));
         }
         else {
             textCurat += ' ';
         }
     }
 
-    std::stringstream ss(textCurat);
-    std::string cuvant;
-    std::string rezultat = "";
+    stringstream ss(textCurat);
+    string cuvant;
+    string rezultat = "";
 
     while (ss >> cuvant) {
         if ((stopWords.empty() || stopWords.find(cuvant) == stopWords.end()) && cuvant.length() > 1) {
@@ -73,23 +87,23 @@ std::string curataSiFiltreazaText(const std::string& text) {
     return rezultat;
 }
 
-std::string extrageEticheta(const std::string& continut, const std::string& eticheta) {
-    std::string continutLower = continut;
-    std::transform(continutLower.begin(), continutLower.end(), continutLower.begin(), ::tolower);
+string extrageEticheta(const string& continut, const string& eticheta) {
+    string continutLower = continut;
+    transform(continutLower.begin(), continutLower.end(), continutLower.begin(), ::tolower);
 
-    std::string tagStart = "<" + eticheta;
-    std::string tagEnd = "</" + eticheta + ">";
-    std::transform(tagStart.begin(), tagStart.end(), tagStart.begin(), ::tolower);
-    std::transform(tagEnd.begin(), tagEnd.end(), tagEnd.begin(), ::tolower);
+    string tagStart = "<" + eticheta;
+    string tagEnd = "</" + eticheta + ">";
+    transform(tagStart.begin(), tagStart.end(), tagStart.begin(), ::tolower);
+    transform(tagEnd.begin(), tagEnd.end(), tagEnd.begin(), ::tolower);
 
     size_t posStart = continutLower.find(tagStart);
-    if (posStart == std::string::npos) return "";
+    if (posStart == string::npos) return "";
 
     size_t posStartClose = continutLower.find(">", posStart);
-    if (posStartClose == std::string::npos) return "";
+    if (posStartClose == string::npos) return "";
 
     size_t posEnd = continutLower.find(tagEnd, posStartClose);
-    if (posEnd == std::string::npos || posEnd <= posStartClose) return "";
+    if (posEnd == string::npos || posEnd <= posStartClose) return "";
 
     size_t dataStart = posStartClose + 1;
     size_t dataLen = posEnd - dataStart;
@@ -97,33 +111,43 @@ std::string extrageEticheta(const std::string& continut, const std::string& etic
     return continut.substr(dataStart, dataLen);
 }
 
-std::string getNumeFisierFaraExtensie(const std::string& numeFisier) {
+string getNumeFisierFaraExtensie(const string& numeFisier) {
     size_t lastDot = numeFisier.find_last_of(".");
-    if (lastDot == std::string::npos) return numeFisier;
+    if (lastDot == string::npos) return numeFisier;
     return numeFisier.substr(0, lastDot);
 }
 
+<<<<<<< HEAD
 void colecteazaArticole(const std::string& folderSursa, const std::string& folderDestinatie, std::vector<DateArticol>& listaArticole) {
     std::string cautarePath = folderSursa + "\\*";
+=======
+void colecteazaArticole(const string& folderSursa, const string& folderDestinatie, vector<DateArticol>& listaArticole) {
+    string cautarePath = folderSursa + "\\*";
+>>>>>>> b9e1aef (Dictionar global)
     WIN32_FIND_DATAA findData;
     HANDLE hFind = FindFirstFileA(cautarePath.c_str(), &findData);
 
     if (hFind == INVALID_HANDLE_VALUE) return;
 
     do {
+<<<<<<< HEAD
         std::string numeElement = findData.cFileName;
+=======
+        string numeElement = findData.cFileName;
+>>>>>>> b9e1aef (Dictionar global)
         if (numeElement == "." || numeElement == "..") continue;
 
-        std::string caleCompleta = folderSursa + "\\" + numeElement;
+        string caleCompleta = folderSursa + "\\" + numeElement;
 
         if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
             colecteazaArticole(caleCompleta, folderDestinatie, listaArticole);
         }
         else {
-            std::string numeLower = numeElement;
-            std::transform(numeLower.begin(), numeLower.end(), numeLower.begin(), ::tolower);
+            string numeLower = numeElement;
+            transform(numeLower.begin(), numeLower.end(), numeLower.begin(), ::tolower);
 
             if (numeLower.size() >= 4 && numeLower.substr(numeLower.size() - 4) == ".xml") {
+<<<<<<< HEAD
                 std::ifstream fileIn(caleCompleta);
                 if (!fileIn.is_open()) continue;
 
@@ -132,6 +156,16 @@ void colecteazaArticole(const std::string& folderSursa, const std::string& folde
 
                 std::string titluBrut = extrageEticheta(continut, "title");
                 std::string textBrut = extrageEticheta(continut, "text");
+=======
+                ifstream fileIn(caleCompleta);
+                if (!fileIn.is_open()) continue;
+
+                string continut((istreambuf_iterator<char>(fileIn)), istreambuf_iterator<char>());
+                fileIn.close();
+
+                string titluBrut = extrageEticheta(continut, "title");
+                string textBrut = extrageEticheta(continut, "text");
+>>>>>>> b9e1aef (Dictionar global)
                 if (textBrut.empty()) {
                     textBrut = extrageEticheta(continut, "body");
                 }
@@ -150,16 +184,26 @@ void colecteazaArticole(const std::string& folderSursa, const std::string& folde
     FindClose(hFind);
 }
 
+<<<<<<< HEAD
 void curataFisiereVechiLaComun(const std::string& folderRezultate) {
     std::string cautarePath = folderRezultate + "\\*.txt";
+=======
+void curataFisiereVechiLaComun(const string& folderRezultate) {
+    string cautarePath = folderRezultate + "\\*.txt";
+>>>>>>> b9e1aef (Dictionar global)
     WIN32_FIND_DATAA findData;
     HANDLE hFind = FindFirstFileA(cautarePath.c_str(), &findData);
 
     if (hFind == INVALID_HANDLE_VALUE) return;
 
     do {
+<<<<<<< HEAD
         std::string numeElement = findData.cFileName;
         std::string caleFisier = folderRezultate + "\\" + numeElement;
+=======
+        string numeElement = findData.cFileName;
+        string caleFisier = folderRezultate + "\\" + numeElement;
+>>>>>>> b9e1aef (Dictionar global)
         DeleteFileA(caleFisier.c_str());
     } while (FindNextFileA(hFind, &findData));
 
@@ -167,12 +211,16 @@ void curataFisiereVechiLaComun(const std::string& folderRezultate) {
 }
 
 int main() {
+<<<<<<< HEAD
     std::string radacinaProiect = "C:\\Users\\Alex\\Documents\\alexandra_anIII\\sisteme_de_recunoastere\\Reuters\\Reuters_34";
+=======
+    string radacinaProiect = "C:\\Users\\Alex\\Documents\\alexandra_anIII\\sisteme_de_recunoastere\\Reuters\\Reuters_34";
+>>>>>>> b9e1aef (Dictionar global)
 
-    std::string srcTesting = radacinaProiect + "\\Testing";
-    std::string srcTraining = radacinaProiect + "\\Training";
-    std::string destTesting = radacinaProiect + "\\Rezultate_TXT\\Testing";
-    std::string destTraining = radacinaProiect + "\\Rezultate_TXT\\Training";
+    string srcTesting = radacinaProiect + "\\Testing";
+    string srcTraining = radacinaProiect + "\\Training";
+    string destTesting = radacinaProiect + "\\Rezultate_TXT\\Testing";
+    string destTraining = radacinaProiect + "\\Rezultate_TXT\\Training";
 
     CreateDirectoryA((radacinaProiect + "\\Rezultate_TXT").c_str(), NULL);
     CreateDirectoryA(destTesting.c_str(), NULL);
@@ -181,6 +229,7 @@ int main() {
     curataFisiereVechiLaComun(radacinaProiect + "\\Rezultate_TXT");
     incarcaStopWords(radacinaProiect + "\\stopwords.txt");
 
+<<<<<<< HEAD
     std::vector<DateArticol> toateArticolele;
 
     std::cout << "\nColectare si filtrare articole...\n";
@@ -195,6 +244,21 @@ int main() {
     for (const auto& art : toateArticolele) {
         std::stringstream ss(art.titluFiltrat + " " + art.textFiltrat);
         std::string cuvant;
+=======
+    vector<DateArticol> toateArticolele;
+
+    cout << "\nColectare si filtrare articole...\n";
+    colecteazaArticole(srcTesting, destTesting, toateArticolele);
+    colecteazaArticole(srcTraining, destTraining, toateArticolele);
+    cout << "Total articole colectate: " << toateArticolele.size() << "\n\n";
+
+    unordered_map<string, int> dictionarGlobal;
+    int indexCurent = 0;
+
+    for (const auto& art : toateArticolele) {
+        stringstream ss(art.titluFiltrat + " " + art.textFiltrat);
+        string cuvant;
+>>>>>>> b9e1aef (Dictionar global)
         while (ss >> cuvant) {
             if (dictionarGlobal.find(cuvant) == dictionarGlobal.end()) {
                 dictionarGlobal[cuvant] = indexCurent++;
@@ -202,6 +266,7 @@ int main() {
         }
     }
 
+<<<<<<< HEAD
     std::cout << "[OK] Dictionar global construit. Total cuvinte unice: " << dictionarGlobal.size() << "\n";
 
     // Salvăm dicționarul global sortat după index
@@ -224,11 +289,34 @@ int main() {
 
         std::stringstream ss(art.titluFiltrat + " " + art.textFiltrat);
         std::string cuvant;
+=======
+    cout << "Dictionar global construit. Total cuvinte unice: " << dictionarGlobal.size() << "\n";
+
+    vector<pair<int, string>> dictionarSortat;
+    for (auto const& [cuvant, idx] : dictionarGlobal) {
+        dictionarSortat.push_back({ idx, cuvant });
+    }
+    sort(dictionarSortat.begin(), dictionarSortat.end());
+
+    ofstream fDict(radacinaProiect + "\\Rezultate_TXT\\dictionar_global.txt");
+    for (auto const& [idx, cuvant] : dictionarSortat) {
+        fDict << idx << " : " << cuvant << "\n";
+    }
+    fDict.close();
+
+    cout << "Generare fisier vectori de aparitii...\n";
+    for (const auto& art : toateArticolele) {
+        unordered_map<int, int> frecventeArticol;
+
+        stringstream ss(art.titluFiltrat + " " + art.textFiltrat);
+        string cuvant;
+>>>>>>> b9e1aef (Dictionar global)
         while (ss >> cuvant) {
             int idx = dictionarGlobal[cuvant];
             frecventeArticol[idx]++;
         }
 
+<<<<<<< HEAD
         std::vector<std::pair<int, int>> vectorAparitii(frecventeArticol.begin(), frecventeArticol.end());
         std::sort(vectorAparitii.begin(), vectorAparitii.end());
 
@@ -237,6 +325,15 @@ int main() {
 
         if (fileOut.is_open()) {
             // Formatul cerut: V nume_fisier.xml: 0:2, 1:1, 2:11
+=======
+        vector<pair<int, int>> vectorAparitii(frecventeArticol.begin(), frecventeArticol.end());
+        sort(vectorAparitii.begin(), vectorAparitii.end());
+
+        string caleTxt = art.folderDestinatie + "\\" + getNumeFisierFaraExtensie(art.numeFisier) + ".txt";
+        ofstream fileOut(caleTxt);
+
+        if (fileOut.is_open()) {
+>>>>>>> b9e1aef (Dictionar global)
             fileOut << "V " << art.numeFisier << ": ";
             for (size_t i = 0; i < vectorAparitii.size(); ++i) {
                 fileOut << vectorAparitii[i].first << ":" << vectorAparitii[i].second;
@@ -249,7 +346,11 @@ int main() {
         }
     }
 
+<<<<<<< HEAD
     std::cout << "[OK] Procesare finalizata cu succes!\n";
+=======
+    cout << "[OK] Procesare finalizata cu succes!\n";
+>>>>>>> b9e1aef (Dictionar global)
 
     return 0;
 }
