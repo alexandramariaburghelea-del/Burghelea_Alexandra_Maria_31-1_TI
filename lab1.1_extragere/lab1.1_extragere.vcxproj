@@ -118,11 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-<<<<<<< HEAD
-      <LanguageStandard>stdcpp17</LanguageStandard>
-=======
       <LanguageStandard>stdcpp20</LanguageStandard>
->>>>>>> b9e1aef (Dictionar global)
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,6 +143,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="lab1.1_extragere.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PorterStemmer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
